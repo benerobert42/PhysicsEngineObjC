@@ -4,7 +4,10 @@ void RigidBody::update(double dt)
 {
     _position += _position + _velocity * dt + _acceleration * ( dt * dt * 0.5);
     _velocity += _velocity + (_acceleration * dt * 0.5);
-    _acceleration += _acceleration + applyForces();
+    _acceleration += _acceleration;
+    
+    Eigen::Vector3f translation(_position);
+    _modelTransform.translation() = translation;
 }
 
 Vector3f RigidBody::applyForces() const

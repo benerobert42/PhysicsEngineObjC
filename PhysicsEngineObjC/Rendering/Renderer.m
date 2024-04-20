@@ -14,6 +14,9 @@
     id<MTLBuffer> _vertexBuffer;
     id<MTLBuffer> _indexBuffer;
     id<MTLBuffer> _instanceBuffer;
+    
+    NSTimeInterval _lastDrawTime;
+    NSTimeInterval _frameDuration; // Desired frame duration in seconds (e.g., 1.0 / 60 for 60 fps)
 
 }
 
@@ -88,6 +91,8 @@
         NSError *error;
 
         _device = mtkView.device;
+        
+        _frameDuration = 1.0 / 60.0; // Default frame duration for 60 fps
 
         // Load all the shader files with a .metal file extension in the project.
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
@@ -147,64 +152,70 @@
 {
     // Save the size of the drawable to pass to the vertex shader.
     _viewportSize.x = size.width;
-    _viewportSize.y = size.height;
+    _viewportSize.y = size.width;
 }
 
 /// Called whenever the view needs to render a frame.
 - (void)drawInMTKView:(nonnull MTKView *)view
 {
-    // Create a new command buffer for each render pass to the current drawable.
-    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    commandBuffer.label = @"MyCommand";
-
-    // Obtain a renderPassDescriptor generated from the view's drawable textures.
-    MTLRenderPassDescriptor *renderPassDescriptor = view.currentRenderPassDescriptor;
-
-    if(renderPassDescriptor != nil)
-    {
-        // Create a render command encoder.
-        id<MTLRenderCommandEncoder> renderEncoder =
-        [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-        renderEncoder.label = @"MyRenderEncoder";
-
-        // Set the region of the drawable to draw into.
-        [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
+    NSTimeInterval currentTime = CACurrentMediaTime();
+    NSTimeInterval elapsedTime = currentTime - _lastDrawTime;
+    
+    if (elapsedTime >= _frameDuration) {
+        _lastDrawTime = currentTime;
         
-        [renderEncoder setRenderPipelineState:_pipelineState];
-
-        // Pass in the parameter data.
-        [self createInstancesBuffer:5];
+        id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+        commandBuffer.label = @"MyCommand";
         
-        [renderEncoder setVertexBuffer:_vertexBuffer offset:0 atIndex:vertexBufferIndex];
-        [renderEncoder setVertexBuffer:_instanceBuffer offset:0 atIndex:indexBufferIndex];
-        [renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
+        // Obtain a renderPassDescriptor generated from the view's drawable textures.
+        MTLRenderPassDescriptor *renderPassDescriptor = view.currentRenderPassDescriptor;
         
-        NSArray<NSData *> *modelMatrices = [self createModelMatrices];
-
-        for (int i = 0; i < modelMatrices.count; i++) {
-            NSData *matrixData = modelMatrices[i];
-            matrix_float4x4 modelMatrix;
-            [matrixData getBytes:&modelMatrix length:sizeof(matrix_float4x4)];
+        if(renderPassDescriptor != nil)
+        {
+            // Create a render command encoder.
+            id<MTLRenderCommandEncoder> renderEncoder =
+            [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+            renderEncoder.label = @"MyRenderEncoder";
             
-            [renderEncoder setVertexBytes:&modelMatrix length:sizeof(matrix_float4x4) atIndex:instanceBufferIndex];
+            // Set the region of the drawable to draw into.
+            [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
             
-            [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
-                                       indexCount:_indexBuffer.length / sizeof(uint16_t)
-                                        indexType:MTLIndexTypeUInt16
-                                      indexBuffer:_indexBuffer
-                                indexBufferOffset:0
-                                    instanceCount:1];
+            [renderEncoder setRenderPipelineState:_pipelineState];
+            
+            // Pass in the parameter data.
+            [self createInstancesBuffer:5];
+            
+            [renderEncoder setVertexBuffer:_vertexBuffer offset:0 atIndex:vertexBufferIndex];
+            [renderEncoder setVertexBuffer:_instanceBuffer offset:0 atIndex:indexBufferIndex];
+            [renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
+            
+            NSArray<NSData *> *modelMatrices = [self createModelMatrices];
+            
+            for (int i = 0; i < modelMatrices.count; i++) {
+                NSData *matrixData = modelMatrices[i];
+                matrix_float4x4 modelMatrix;
+                [matrixData getBytes:&modelMatrix length:sizeof(matrix_float4x4)];
+                
+                [renderEncoder setVertexBytes:&modelMatrix length:sizeof(matrix_float4x4) atIndex:instanceBufferIndex];
+                
+                [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                                          indexCount:_indexBuffer.length / sizeof(uint16_t)
+                                           indexType:MTLIndexTypeUInt16
+                                         indexBuffer:_indexBuffer
+                                   indexBufferOffset:0
+                                       instanceCount:1];
+            }
+            
+            
+            [renderEncoder endEncoding];
+            
+            // Schedule a present once the framebuffer is complete using the current drawable.
+            [commandBuffer presentDrawable:view.currentDrawable];
         }
-
-
-        [renderEncoder endEncoding];
-
-        // Schedule a present once the framebuffer is complete using the current drawable.
-        [commandBuffer presentDrawable:view.currentDrawable];
+        
+        // Finalize rendering here & push the command buffer to the GPU.
+        [commandBuffer commit];
     }
-
-    // Finalize rendering here & push the command buffer to the GPU.
-    [commandBuffer commit];
 }
 
 @end

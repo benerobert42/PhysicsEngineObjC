@@ -42,8 +42,24 @@ void PhysicsEngine::applyConstraint() {
     }
 }
 
+void PhysicsEngine::update() {
+    NSTimeInterval currentTime = CACurrentMediaTime();
+    NSTimeInterval elapsedTime = currentTime - _lastDrawTime;
+    
+    if (elapsedTime >= _frameDuration) {
+        _lastDrawTime = currentTime;
+        updateObjects(elapsedTime);
+    }
+}
+    
 void PhysicsEngine::updateObjects(float dt) {
     for (auto& body : _bodies) {
         body.update(dt);
     }
 }
+
+void PhysicsEngine::addBody(RigidBody& body) {
+    _bodies.emplace(body);
+}
+    
+    

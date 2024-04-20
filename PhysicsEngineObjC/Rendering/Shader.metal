@@ -29,7 +29,8 @@ vertex VertexOut vertex_main(const VertexIn in [[stage_in]],
 
 fragment float4 fragment_main(VertexOut in [[stage_in]])
 {
-    return float4(0.0, 0.6, 0.7, 1.0);
+    float3 baseColor = 0.6*(dot(in.normal, float3(1,1,1))) * float3(0,0.8,0.6) + float3(0,0.8,0.6) * 0.7;
+    return float4(baseColor, 1.0);
 }
 
 
