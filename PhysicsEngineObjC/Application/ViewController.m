@@ -25,4 +25,8 @@
     _view.delegate = _renderer;
 }
 
+- (Renderer *)getRenderer {
+    return _renderer;
+}
+
 @end

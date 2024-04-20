@@ -1,5 +1,4 @@
 @import simd;
-@import MetalKit;
 
 #import "Renderer.h"
 #import "ShaderTypes.h"
@@ -14,43 +13,48 @@
     id<MTLBuffer> _vertexBuffer;
     id<MTLBuffer> _indexBuffer;
     id<MTLBuffer> _instanceBuffer;
+    id<MTLCommandBuffer> _commandBuffer;
+    MTLRenderPassDescriptor *_renderPassDescriptor;
     
     NSTimeInterval _lastDrawTime;
     NSTimeInterval _frameDuration; // Desired frame duration in seconds (e.g., 1.0 / 60 for 60 fps)
-
 }
 
-- (NSMutableArray<NSData *> *)createModelMatrices {
-    // Number of instances
-    NSUInteger numInstances = 5;
+//- (NSMutableArray<NSData *> *)createModelMatrices {
+//    // Number of instances
+//    NSUInteger numInstances = 5;
+//
+//    // Initialize an array to hold the model matrices
+//    NSMutableArray<NSData *> *modelMatrices = [NSMutableArray arrayWithCapacity:numInstances];
+//
+//    // Define the translation amounts along y and x axis
+//    float yTranslation = 0.2; // Change this according to your desired y-axis translation
+//    float xTranslationIncrement = 0.2; // Change this according to your desired x-axis translation increment
+//
+//    // Create model matrices for each instance
+//    for (NSUInteger i = 0; i < numInstances; i++) {
+//        // Calculate x translation based on instance index
+//        float xTranslation = i * xTranslationIncrement;
+//
+//        // Create a translation matrix using simd library
+//        matrix_float4x4 translationMatrix = matrix_identity_float4x4;
+//        translationMatrix.columns[3].x = xTranslation;
+//        translationMatrix.columns[3].y = yTranslation;
+//
+//        // Convert the matrix to NSData
+//        NSData *matrixData = [NSData dataWithBytes:&translationMatrix length:sizeof(matrix_float4x4)];
+//
+//        // Add the matrix data to the array
+//        [modelMatrices addObject:matrixData];
+//    }
+//    return modelMatrices;
+//}
 
-    // Initialize an array to hold the model matrices
-    NSMutableArray<NSData *> *modelMatrices = [NSMutableArray arrayWithCapacity:numInstances];
-
-    // Define the translation amounts along y and x axis
-    float yTranslation = 0.2; // Change this according to your desired y-axis translation
-    float xTranslationIncrement = 0.2; // Change this according to your desired x-axis translation increment
-
-    // Create model matrices for each instance
-    for (NSUInteger i = 0; i < numInstances; i++) {
-        // Calculate x translation based on instance index
-        float xTranslation = i * xTranslationIncrement;
-
-        // Create a translation matrix using simd library
-        matrix_float4x4 translationMatrix = matrix_identity_float4x4;
-        translationMatrix.columns[3].x = xTranslation;
-        translationMatrix.columns[3].y = yTranslation;
-
-        // Convert the matrix to NSData
-        NSData *matrixData = [NSData dataWithBytes:&translationMatrix length:sizeof(matrix_float4x4)];
-
-        // Add the matrix data to the array
-        [modelMatrices addObject:matrixData];
-    }
-    return modelMatrices;
+- (id<MTLRenderCommandEncoder>)getRenderCommandEncoder {
+    _commandBuffer =[_commandQueue commandBuffer];
+    id<MTLRenderCommandEncoder> renderEncoder = [self->_commandBuffer renderCommandEncoderWithDescriptor:self->_renderPassDescriptor];
+    return renderEncoder;
 }
-
-
 
 - (id<MTLBuffer>)createInstancesBuffer:(int)objectCount
 {
@@ -160,61 +164,55 @@
 {
     NSTimeInterval currentTime = CACurrentMediaTime();
     NSTimeInterval elapsedTime = currentTime - _lastDrawTime;
-    
+
     if (elapsedTime >= _frameDuration) {
         _lastDrawTime = currentTime;
-        
-        id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-        commandBuffer.label = @"MyCommand";
-        
+
         // Obtain a renderPassDescriptor generated from the view's drawable textures.
-        MTLRenderPassDescriptor *renderPassDescriptor = view.currentRenderPassDescriptor;
-        
-        if(renderPassDescriptor != nil)
+        _renderPassDescriptor = view.currentRenderPassDescriptor;
+
+        if(_renderPassDescriptor != nil)
         {
             // Create a render command encoder.
-            id<MTLRenderCommandEncoder> renderEncoder =
-            [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+            id<MTLRenderCommandEncoder> renderEncoder = [self getRenderCommandEncoder];
             renderEncoder.label = @"MyRenderEncoder";
-            
+
             // Set the region of the drawable to draw into.
             [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
-            
+
             [renderEncoder setRenderPipelineState:_pipelineState];
-            
+
             // Pass in the parameter data.
-            [self createInstancesBuffer:5];
-            
+            [self createInstancesBuffer:2];
+
             [renderEncoder setVertexBuffer:_vertexBuffer offset:0 atIndex:vertexBufferIndex];
             [renderEncoder setVertexBuffer:_instanceBuffer offset:0 atIndex:indexBufferIndex];
             [renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
-            
-            NSArray<NSData *> *modelMatrices = [self createModelMatrices];
-            
-            for (int i = 0; i < modelMatrices.count; i++) {
-                NSData *matrixData = modelMatrices[i];
-                matrix_float4x4 modelMatrix;
-                [matrixData getBytes:&modelMatrix length:sizeof(matrix_float4x4)];
-                
-                [renderEncoder setVertexBytes:&modelMatrix length:sizeof(matrix_float4x4) atIndex:instanceBufferIndex];
-                
-                [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
-                                          indexCount:_indexBuffer.length / sizeof(uint16_t)
-                                           indexType:MTLIndexTypeUInt16
-                                         indexBuffer:_indexBuffer
-                                   indexBufferOffset:0
-                                       instanceCount:1];
-            }
-            
-            
+
+            //NSArray<NSData *> *modelMatrices = [self createModelMatrices];
+
+//            for (int i = 0; i < 2; i++) {
+//                NSData *matrixData = modelMatrices[i];
+//                matrix_float4x4 modelMatrix;
+//                [matrixData getBytes:&modelMatrix length:sizeof(matrix_float4x4)];
+//
+//                [renderEncoder setVertexBytes:&modelMatrix length:sizeof(matrix_float4x4) atIndex:instanceBufferIndex];
+
             [renderEncoder endEncoding];
-            
-            // Schedule a present once the framebuffer is complete using the current drawable.
-            [commandBuffer presentDrawable:view.currentDrawable];
+            [_commandBuffer commit];
+
+            [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                                      indexCount:_indexBuffer.length / sizeof(uint16_t)
+                                       indexType:MTLIndexTypeUInt16
+                                     indexBuffer:_indexBuffer
+                               indexBufferOffset:0
+                                   instanceCount:1];
+
+            [_commandBuffer presentDrawable:view.currentDrawable];
         }
-        
+
         // Finalize rendering here & push the command buffer to the GPU.
-        [commandBuffer commit];
+
     }
 }
 

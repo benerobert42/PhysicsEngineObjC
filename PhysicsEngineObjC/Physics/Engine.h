@@ -4,6 +4,8 @@
 
 #include "Eigen/Dense"
 
+#include "ViewController.h"
+
 #include <vector>
 #import <Foundation/Foundation.h>
 
@@ -13,7 +15,7 @@ class RigidBody;
 
 class PhysicsEngine {
 private:
-    static std::vector<RigidBody&> _bodies;
+    std::vector<RigidBody*> _bodies;
     Vector3f _constraintCenter;
     float _constraintRadius;
     
@@ -30,6 +32,7 @@ public:
                       float constraintRadius = 1.0,
                       uint32_t subSteps = 1,
                       float dt = 60.0 / 1000.0) :
+            _bodies(),
             _constraintCenter(constraintCenter),
             _constraintRadius(constraintRadius),
             _subSteps(subSteps),
@@ -43,5 +46,7 @@ public:
     
     void updateObjects(float dt);
     
-    void addBody(RigidBody& body);
+    void addBody(RigidBody* body);
+
+    void bindModelMatrixes();
 };

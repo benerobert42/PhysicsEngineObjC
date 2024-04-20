@@ -13,7 +13,7 @@ void RigidBody::update(double dt)
 Vector3f RigidBody::applyForces() const
 {
     Vector3f gravAcceleration = Vector3f{0.0, 0.0, -9.81 };
-    Vector3f dragForce = 0.5 * _drag * (_velocity * _velocity); // D = 0.5 * (rho * C * Area * vel^2)
-    Vector3f dragAcceleration = dragForce / _mass; // a = F/m
+    float dragForce = 0.5 * _drag * _velocity.squaredNorm(); // D = 0.5 * (rho * C * Area * vel^2)
+    Vector3f dragAcceleration = _velocity.normalized() * dragForce / _mass; // a = F/m
     return gravAcceleration - dragAcceleration;
 }
