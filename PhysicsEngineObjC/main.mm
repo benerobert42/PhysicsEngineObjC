@@ -1,5 +1,3 @@
-#include "Engine.h"
-#include "RigidBody.h"
 #import <Cocoa/Cocoa.h>
 
 int main(int argc, const char * argv[]) {

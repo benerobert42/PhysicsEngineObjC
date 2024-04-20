@@ -13,7 +13,7 @@ class RigidBody;
 
 class PhysicsEngine {
 private:
-    static std::vector<RigidBody&> _bodies();
+    static std::vector<RigidBody&> _bodies;
     Vector3f _constraintCenter;
     float _constraintRadius;
     

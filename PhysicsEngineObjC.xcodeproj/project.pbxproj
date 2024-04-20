@@ -10,16 +10,13 @@
 		A9D490192BD052D800AA893F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D490182BD052D800AA893F /* ViewController.m */; };
 		A9D4901B2BD052DD00AA893F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9D4901A2BD052DD00AA893F /* Assets.xcassets */; };
 		A9D4901E2BD052DD00AA893F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9D4901C2BD052DD00AA893F /* Main.storyboard */; };
-		A9D490202BD052DD00AA893F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D4901F2BD052DD00AA893F /* main.m */; };
+		A9D490202BD052DD00AA893F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D4901F2BD052DD00AA893F /* main.mm */; };
 		A9D490292BD053BB00AA893F /* Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D490282BD053BB00AA893F /* Renderer.m */; };
 		A9D4902D2BD053F700AA893F /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A9D4902C2BD053F700AA893F /* Shader.metal */; };
 		A9D490302BD054FB00AA893F /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4902F2BD054FB00AA893F /* Metal.framework */; };
 		A9D490322BD0550B00AA893F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D490312BD0550B00AA893F /* Foundation.framework */; };
 		A9D490342BD057BE00AA893F /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D490332BD057BE00AA893F /* MetalKit.framework */; };
 		A9D490362BD057EC00AA893F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D490352BD057EC00AA893F /* AppKit.framework */; };
-		A9D490392BD0798800AA893F /* MetalToCpp.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D490382BD0798800AA893F /* MetalToCpp.mm */; };
-		A9D4903F2BD07B6C00AA893F /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D4903B2BD07B6C00AA893F /* Engine.cpp */; };
-		A9D490402BD07B6C00AA893F /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D4903C2BD07B6C00AA893F /* RigidBody.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +25,7 @@
 		A9D490182BD052D800AA893F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A9D4901A2BD052DD00AA893F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9D4901D2BD052DD00AA893F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		A9D4901F2BD052DD00AA893F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A9D4901F2BD052DD00AA893F /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		A9D490212BD052DD00AA893F /* PhysicsEngineObjC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhysicsEngineObjC.entitlements; sourceTree = "<group>"; };
 		A9D490282BD053BB00AA893F /* Renderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Renderer.m; sourceTree = "<group>"; };
 		A9D4902A2BD053C900AA893F /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
@@ -40,7 +37,7 @@
 		A9D490352BD057EC00AA893F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		A9D490382BD0798800AA893F /* MetalToCpp.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MetalToCpp.mm; sourceTree = "<group>"; };
 		A9D4903A2BD0799700AA893F /* MetalToCpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetalToCpp.h; sourceTree = "<group>"; };
-		A9D4903B2BD07B6C00AA893F /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
+		A9D4903B2BD07B6C00AA893F /* Engine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Engine.mm; sourceTree = "<group>"; };
 		A9D4903C2BD07B6C00AA893F /* RigidBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RigidBody.cpp; sourceTree = "<group>"; };
 		A9D4903D2BD07B6C00AA893F /* Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Engine.h; sourceTree = "<group>"; };
 		A9D4903E2BD07B6C00AA893F /* RigidBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RigidBody.h; sourceTree = "<group>"; };
@@ -82,7 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				A9D4901C2BD052DD00AA893F /* Main.storyboard */,
-				A9D4901F2BD052DD00AA893F /* main.m */,
+				A9D4901F2BD052DD00AA893F /* main.mm */,
 				A9D490412BD07B8400AA893F /* Application */,
 				A9D490372BD0789B00AA893F /* Physics */,
 				A9D490272BD053A500AA893F /* Rendering */,
@@ -121,7 +118,7 @@
 			children = (
 				A9D4903D2BD07B6C00AA893F /* Engine.h */,
 				A9D4903E2BD07B6C00AA893F /* RigidBody.h */,
-				A9D4903B2BD07B6C00AA893F /* Engine.cpp */,
+				A9D4903B2BD07B6C00AA893F /* Engine.mm */,
 				A9D4903C2BD07B6C00AA893F /* RigidBody.cpp */,
 			);
 			path = Physics;
@@ -206,11 +203,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9D490292BD053BB00AA893F /* Renderer.m in Sources */,
-				A9D4903F2BD07B6C00AA893F /* Engine.cpp in Sources */,
-				A9D490392BD0798800AA893F /* MetalToCpp.mm in Sources */,
 				A9D490192BD052D800AA893F /* ViewController.m in Sources */,
-				A9D490402BD07B6C00AA893F /* RigidBody.cpp in Sources */,
-				A9D490202BD052DD00AA893F /* main.m in Sources */,
+				A9D490202BD052DD00AA893F /* main.mm in Sources */,
 				A9D4902D2BD053F700AA893F /* Shader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,7 +342,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "/Users/benerobert/Downloads/**";
+				HEADER_SEARCH_PATHS = /Users/benerobert/Downloads;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -373,7 +367,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "/Users/benerobert/Downloads/**";
+				HEADER_SEARCH_PATHS = /Users/benerobert/Downloads;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
