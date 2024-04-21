@@ -15,7 +15,7 @@
 		A9D4901B2BD052DD00AA893F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9D4901A2BD052DD00AA893F /* Assets.xcassets */; };
 		A9D4901E2BD052DD00AA893F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9D4901C2BD052DD00AA893F /* Main.storyboard */; };
 		A9D490202BD052DD00AA893F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D4901F2BD052DD00AA893F /* main.mm */; };
-		A9D490292BD053BB00AA893F /* Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D490282BD053BB00AA893F /* Renderer.m */; };
+		A9D490292BD053BB00AA893F /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D490282BD053BB00AA893F /* Renderer.mm */; };
 		A9D4902D2BD053F700AA893F /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A9D4902C2BD053F700AA893F /* Shader.metal */; };
 		A9D490302BD054FB00AA893F /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4902F2BD054FB00AA893F /* Metal.framework */; };
 		A9D490322BD0550B00AA893F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D490312BD0550B00AA893F /* Foundation.framework */; };
@@ -33,7 +33,7 @@
 		A9D4901D2BD052DD00AA893F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A9D4901F2BD052DD00AA893F /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		A9D490212BD052DD00AA893F /* PhysicsEngineObjC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhysicsEngineObjC.entitlements; sourceTree = "<group>"; };
-		A9D490282BD053BB00AA893F /* Renderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Renderer.m; sourceTree = "<group>"; };
+		A9D490282BD053BB00AA893F /* Renderer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Renderer.mm; sourceTree = "<group>"; };
 		A9D4902A2BD053C900AA893F /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
 		A9D4902B2BD053E600AA893F /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
 		A9D4902C2BD053F700AA893F /* Shader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 				A9D4902A2BD053C900AA893F /* Renderer.h */,
 				A9D4902B2BD053E600AA893F /* ShaderTypes.h */,
 				A9D490382BD0798800AA893F /* MetalToCpp.mm */,
-				A9D490282BD053BB00AA893F /* Renderer.m */,
+				A9D490282BD053BB00AA893F /* Renderer.mm */,
 				A9D4902C2BD053F700AA893F /* Shader.metal */,
 				A96588DA2BD4292C002AE7ED /* RendererToPhys.cpp */,
 				A96588DB2BD4292C002AE7ED /* RendererToPhys.h */,
@@ -211,7 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A96588D92BD4287F002AE7ED /* MetalToCpp.mm in Sources */,
-				A9D490292BD053BB00AA893F /* Renderer.m in Sources */,
+				A9D490292BD053BB00AA893F /* Renderer.mm in Sources */,
 				A9D490192BD052D800AA893F /* ViewController.m in Sources */,
 				A96588E22BD46712002AE7ED /* RigidBody.cpp in Sources */,
 				A96588DC2BD4292C002AE7ED /* RendererToPhys.cpp in Sources */,

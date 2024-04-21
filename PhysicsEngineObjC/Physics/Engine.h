@@ -15,7 +15,6 @@ class RigidBody;
 
 class PhysicsEngine {
 private:
-    std::vector<RigidBody*> _bodies;
     Vector3f _constraintCenter;
     float _constraintRadius;
     
@@ -26,6 +25,7 @@ private:
     NSTimeInterval _frameDuration;
     
 public:
+    std::vector<RigidBody*> _bodies;
     NSTimeInterval _lastDrawTime;
     
     PhysicsEngine(Vector3f constraintCenter = {0, 0, 0},

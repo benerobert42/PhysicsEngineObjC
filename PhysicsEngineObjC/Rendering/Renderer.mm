@@ -1,14 +1,18 @@
-@import simd;
+#include <simd/simd.h>
 
 #import "Renderer.h"
 #import "ShaderTypes.h"
+#include "Engine.h"
+#include "RigidBody.h"
+
+#include "Eigen/Dense"
 
 @implementation Renderer
 {
     id<MTLDevice> _device;
     id<MTLRenderPipelineState> _pipelineState;
     id<MTLCommandQueue> _commandQueue;
-    vector_uint2 _viewportSize;
+    vector_double2 _viewportSize;
 
     id<MTLBuffer> _vertexBuffer;
     id<MTLBuffer> _indexBuffer;
@@ -16,6 +20,7 @@
     id<MTLCommandBuffer> _commandBuffer;
     MTLRenderPassDescriptor *_renderPassDescriptor;
     id<MTLRenderCommandEncoder> _renderEncoder;
+    PhysicsEngine _engine;
     
     NSTimeInterval _lastDrawTime;
     NSTimeInterval _frameDuration; // Desired frame duration in seconds (e.g., 1.0 / 60 for 60 fps)
@@ -28,7 +33,7 @@
 
 - (void)createInstancesBuffer:(int)objectCount
 {
-    _instanceBuffer = [_device newBufferWithLength: sizeof(float) * (16 + 9) * objectCount options:MTLResourceStorageModeShared];
+    _instanceBuffer = [_device newBufferWithLength: sizeof(float) * 16 * objectCount options:MTLResourceStorageModeShared];
 }
 
 - (void)createMetalBuffersForSphereWithRadius:(float)radius
@@ -71,7 +76,7 @@
     MTLRenderPassColorAttachmentDescriptor *colorAttachment = renderPassDescriptor.colorAttachments[0];
     colorAttachment.texture = colorTexture;
     colorAttachment.loadAction = MTLLoadActionClear;
-    colorAttachment.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
+    colorAttachment.clearColor = MTLClearColorMake(0.0, 0.4, 0.6, 1.0);
     colorAttachment.storeAction = MTLStoreActionStore;
 
     // Configure depth attachment
@@ -86,6 +91,8 @@
         depthAttachment.loadAction = MTLLoadActionClear;
         depthAttachment.storeAction = MTLStoreActionDontCare;
     }
+    
+    _renderPassDescriptor = renderPassDescriptor;
 }
 
 - (void)createRenderCommandEncoder: (MTLRenderPassDescriptor*)renderPassDescriptor
@@ -105,6 +112,7 @@
         _device = mtkView.device;
         
         _frameDuration = 1.0 / 60.0; // Default frame duration for 60 fps
+        _lastDrawTime = 0.0;
 
         // Load all the shader files with a .metal file extension in the project.
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
@@ -153,6 +161,13 @@
 
         // Create the command queue
         _commandQueue = [_device newCommandQueue];
+        
+        RigidBody body_1;
+        Vector3f position_2 {0, 0, 0.5};
+        Vector3f velocity_2 {0.5, 0.5, 0};
+        RigidBody body_2 {position_2, velocity_2};
+        _engine.addBody(&body_1);
+        _engine.addBody(&body_2);
     }
 
     return self;
@@ -174,14 +189,22 @@
 
     if (elapsedTime >= _frameDuration) {
         _lastDrawTime = currentTime;
-
+        _engine.update();
         // Obtain a renderPassDescriptor generated from the view's drawable textures.
-        [self createRenderPassDescriptor:view.drawableSize];
+        //[self createRenderPassDescriptor:view.drawableSize];
+        
+        _renderPassDescriptor = view.currentRenderPassDescriptor;
 
+        id<MTLDrawable> drawable = view.currentDrawable;
+           
+        id<MTLCommandBuffer> _commandBuffer = [self->_commandQueue commandBuffer];
+        id<MTLRenderCommandEncoder> _renderEncoder = [_commandBuffer renderCommandEncoderWithDescriptor:_renderPassDescriptor];
+        _renderEncoder.label = @"MyRenderEncoder";
+               
         if(_renderPassDescriptor != nil)
         {
-            [self createCommandBuffer];
-            [self createRenderCommandEncoder:view.currentRenderPassDescriptor];
+            //[self createCommandBuffer];
+            //[self createRenderCommandEncoder:view.currentRenderPassDescriptor];
 
             // Set the region of the drawable to draw into.
             [_renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
@@ -196,13 +219,20 @@
             [_renderEncoder setVertexBuffer:_instanceBuffer offset:0 atIndex:instanceBufferIndex];
             
             [_renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
-
-            [_renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
-                                      indexCount:_indexBuffer.length / sizeof(uint16_t)
-                                       indexType:MTLIndexTypeUInt16
-                                     indexBuffer:_indexBuffer
-                               indexBufferOffset:0
-                                   instanceCount:1];
+            
+            for (int i = 0; i < _engine._bodies.size(); i++) {
+                auto matrix = _engine._bodies[i]->_modelTransform;
+                
+                [_renderEncoder setVertexBytes:matrix.matrix().data() length:sizeof(float) * 16 atIndex:instanceBufferIndex];
+                
+                [_renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                                          indexCount:_indexBuffer.length / sizeof(uint16_t)
+                                           indexType:MTLIndexTypeUInt16
+                                         indexBuffer:_indexBuffer
+                                   indexBufferOffset:0
+                                       instanceCount:1];
+            }
+                        
 
             [_commandBuffer presentDrawable:view.currentDrawable];
             
