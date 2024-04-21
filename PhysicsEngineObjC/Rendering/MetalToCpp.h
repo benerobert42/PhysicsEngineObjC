@@ -17,3 +17,5 @@ id<MTLRenderCommandEncoder> getRenderCommandEncoder();
 void bindVertexBytes(id<MTLRenderCommandEncoder> renderEncoder,
                      const Eigen::Affine3f& matrix,
                      int bufferIndex);
+
+void setupRenderer();

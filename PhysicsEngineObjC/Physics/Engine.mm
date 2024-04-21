@@ -66,7 +66,7 @@ void PhysicsEngine::addBody(RigidBody* body) {
     _bodies.push_back(body);
 }
 
-void PhysicsEngine::bindModelMatrixes() {
+void PhysicsEngine::bindModelMatrices() {
     for (auto body : _bodies) {
         auto renderEncoder = getRenderCommandEncoder();
         bindVertexBytes(renderEncoder,

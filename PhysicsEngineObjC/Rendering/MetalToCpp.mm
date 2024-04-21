@@ -23,3 +23,15 @@ void bindVertexBytes(id<MTLRenderCommandEncoder> renderEncoder,
                      int bufferIndex) {
     [renderEncoder setVertexBytes:matrix.matrix().data() length:sizeof(float) * 16 atIndex:bufferIndex];
 }
+
+void setupRenderer() {
+    MTKView* view = [[MTKView alloc] initWithFrame:CGRectZero];
+    view.device = MTLCreateSystemDefaultDevice();
+    if (view.device) {
+        Renderer* renderer = [[Renderer alloc] initWithMetalKitView:view];
+        [renderer createCommandBuffer];
+        [renderer createRenderCommandEncoder:view.currentRenderPassDescriptor];
+    } else {
+        NSLog(@"Metal is not supported on this device.");
+    }
+}

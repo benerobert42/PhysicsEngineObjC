@@ -15,52 +15,20 @@
     id<MTLBuffer> _instanceBuffer;
     id<MTLCommandBuffer> _commandBuffer;
     MTLRenderPassDescriptor *_renderPassDescriptor;
+    id<MTLRenderCommandEncoder> _renderEncoder;
     
     NSTimeInterval _lastDrawTime;
     NSTimeInterval _frameDuration; // Desired frame duration in seconds (e.g., 1.0 / 60 for 60 fps)
 }
 
-//- (NSMutableArray<NSData *> *)createModelMatrices {
-//    // Number of instances
-//    NSUInteger numInstances = 5;
-//
-//    // Initialize an array to hold the model matrices
-//    NSMutableArray<NSData *> *modelMatrices = [NSMutableArray arrayWithCapacity:numInstances];
-//
-//    // Define the translation amounts along y and x axis
-//    float yTranslation = 0.2; // Change this according to your desired y-axis translation
-//    float xTranslationIncrement = 0.2; // Change this according to your desired x-axis translation increment
-//
-//    // Create model matrices for each instance
-//    for (NSUInteger i = 0; i < numInstances; i++) {
-//        // Calculate x translation based on instance index
-//        float xTranslation = i * xTranslationIncrement;
-//
-//        // Create a translation matrix using simd library
-//        matrix_float4x4 translationMatrix = matrix_identity_float4x4;
-//        translationMatrix.columns[3].x = xTranslation;
-//        translationMatrix.columns[3].y = yTranslation;
-//
-//        // Convert the matrix to NSData
-//        NSData *matrixData = [NSData dataWithBytes:&translationMatrix length:sizeof(matrix_float4x4)];
-//
-//        // Add the matrix data to the array
-//        [modelMatrices addObject:matrixData];
-//    }
-//    return modelMatrices;
-//}
-
-- (id<MTLRenderCommandEncoder>)getRenderCommandEncoder {
-    _commandBuffer =[_commandQueue commandBuffer];
-    id<MTLRenderCommandEncoder> renderEncoder = [self->_commandBuffer renderCommandEncoderWithDescriptor:self->_renderPassDescriptor];
-    return renderEncoder;
+- (id<MTLRenderCommandEncoder>)getRenderCommandEncoder
+{
+    return _renderEncoder;
 }
 
-- (id<MTLBuffer>)createInstancesBuffer:(int)objectCount
+- (void)createInstancesBuffer:(int)objectCount
 {
-    id<MTLBuffer> instancesBuffer = [_device newBufferWithLength: sizeof(float) * (16 + 9) * objectCount options:MTLResourceStorageModeShared];
-    
-    return instancesBuffer;
+    _instanceBuffer = [_device newBufferWithLength: sizeof(float) * (16 + 9) * objectCount options:MTLResourceStorageModeShared];
 }
 
 - (void)createMetalBuffersForSphereWithRadius:(float)radius
@@ -86,6 +54,46 @@
     _indexBuffer = submesh.indexBuffer.buffer;
 }
 
+- (void)createCommandBuffer
+{
+    _commandBuffer = [_commandQueue commandBuffer];
+}
+
+- (void)createRenderPassDescriptor:(CGSize)size
+{
+    // Configure color attachment
+    MTLTextureDescriptor *colorTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:size.width height:size.height mipmapped:NO];
+    colorTextureDescriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
+    id<MTLTexture> colorTexture = [_device newTextureWithDescriptor:colorTextureDescriptor];
+
+    MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+
+    MTLRenderPassColorAttachmentDescriptor *colorAttachment = renderPassDescriptor.colorAttachments[0];
+    colorAttachment.texture = colorTexture;
+    colorAttachment.loadAction = MTLLoadActionClear;
+    colorAttachment.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
+    colorAttachment.storeAction = MTLStoreActionStore;
+
+    // Configure depth attachment
+    MTLRenderPassDepthAttachmentDescriptor *depthAttachment = renderPassDescriptor.depthAttachment;
+    if (depthAttachment) {
+        MTLTextureDescriptor *depthTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatDepth32Float width:size.width height:size.height mipmapped:NO];
+        depthTextureDescriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
+        depthTextureDescriptor.storageMode = MTLStorageModePrivate;
+        
+        id<MTLTexture> depthTexture = [_device newTextureWithDescriptor:depthTextureDescriptor];
+        depthAttachment.texture = depthTexture;
+        depthAttachment.loadAction = MTLLoadActionClear;
+        depthAttachment.storeAction = MTLStoreActionDontCare;
+    }
+}
+
+- (void)createRenderCommandEncoder: (MTLRenderPassDescriptor*)renderPassDescriptor
+{
+    _renderEncoder = [self->_commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+    _renderEncoder.label = @"MyRenderEncoder";
+}
+
 
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView
 {
@@ -100,7 +108,6 @@
 
         // Load all the shader files with a .metal file extension in the project.
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
-
         id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertex_main"];
         id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragment_main"];
 
@@ -169,39 +176,28 @@
         _lastDrawTime = currentTime;
 
         // Obtain a renderPassDescriptor generated from the view's drawable textures.
-        _renderPassDescriptor = view.currentRenderPassDescriptor;
+        [self createRenderPassDescriptor:view.drawableSize];
 
         if(_renderPassDescriptor != nil)
         {
-            // Create a render command encoder.
-            id<MTLRenderCommandEncoder> renderEncoder = [self getRenderCommandEncoder];
-            renderEncoder.label = @"MyRenderEncoder";
+            [self createCommandBuffer];
+            [self createRenderCommandEncoder:view.currentRenderPassDescriptor];
 
             // Set the region of the drawable to draw into.
-            [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
+            [_renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
 
-            [renderEncoder setRenderPipelineState:_pipelineState];
+            [_renderEncoder setRenderPipelineState:_pipelineState];
 
             // Pass in the parameter data.
             [self createInstancesBuffer:2];
 
-            [renderEncoder setVertexBuffer:_vertexBuffer offset:0 atIndex:vertexBufferIndex];
-            [renderEncoder setVertexBuffer:_instanceBuffer offset:0 atIndex:indexBufferIndex];
-            [renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
+            [_renderEncoder setVertexBuffer:_vertexBuffer offset:0 atIndex:vertexBufferIndex];
+            [_renderEncoder setVertexBuffer:_indexBuffer offset:0 atIndex:indexBufferIndex];
+            [_renderEncoder setVertexBuffer:_instanceBuffer offset:0 atIndex:instanceBufferIndex];
+            
+            [_renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
 
-            //NSArray<NSData *> *modelMatrices = [self createModelMatrices];
-
-//            for (int i = 0; i < 2; i++) {
-//                NSData *matrixData = modelMatrices[i];
-//                matrix_float4x4 modelMatrix;
-//                [matrixData getBytes:&modelMatrix length:sizeof(matrix_float4x4)];
-//
-//                [renderEncoder setVertexBytes:&modelMatrix length:sizeof(matrix_float4x4) atIndex:instanceBufferIndex];
-
-            [renderEncoder endEncoding];
-            [_commandBuffer commit];
-
-            [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+            [_renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
                                       indexCount:_indexBuffer.length / sizeof(uint16_t)
                                        indexType:MTLIndexTypeUInt16
                                      indexBuffer:_indexBuffer
@@ -209,10 +205,10 @@
                                    instanceCount:1];
 
             [_commandBuffer presentDrawable:view.currentDrawable];
+            
+            [_renderEncoder endEncoding];
+            [_commandBuffer commit];
         }
-
-        // Finalize rendering here & push the command buffer to the GPU.
-
     }
 }
 

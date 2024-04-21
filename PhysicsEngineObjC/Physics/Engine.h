@@ -48,5 +48,5 @@ public:
     
     void addBody(RigidBody* body);
 
-    void bindModelMatrixes();
+    void bindModelMatrices();
 };
