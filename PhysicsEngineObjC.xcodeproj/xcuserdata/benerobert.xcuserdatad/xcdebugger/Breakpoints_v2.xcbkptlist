@@ -334,10 +334,138 @@
             filePath = "PhysicsEngineObjC/Rendering/Renderer.mm"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
             landmarkName = "-drawInMTKView:"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D5353E6E-B11F-4363-B092-3225E220FD46 - 83050ac3fb67a457"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[Renderer drawInMTKView:]"
+                  moduleName = "PhysicsEngineObjC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benerobert/Documents/Coding/CppProjects/PhysicsEngineObjC/PhysicsEngineObjC/Rendering/Renderer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "228"
+                  endingLineNumber = "228"
+                  offsetFromSymbolStart = "1621">
+               </Location>
+               <Location
+                  uuid = "D5353E6E-B11F-4363-B092-3225E220FD46 - 83050ac3fb67a4b6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[Renderer drawInMTKView:]"
+                  moduleName = "PhysicsEngineObjC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benerobert/Documents/Coding/CppProjects/PhysicsEngineObjC/PhysicsEngineObjC/Rendering/Renderer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "227"
+                  endingLineNumber = "227"
+                  offsetFromSymbolStart = "1603">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "919E3DCD-E0C0-49BD-A499-B6393F51DB51"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PhysicsEngineObjC/Rendering/Renderer.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "-drawInMTKView:"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "919E3DCD-E0C0-49BD-A499-B6393F51DB51 - 83050ac3fb67a72b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[Renderer drawInMTKView:]"
+                  moduleName = "PhysicsEngineObjC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benerobert/Documents/Coding/CppProjects/PhysicsEngineObjC/PhysicsEngineObjC/Rendering/Renderer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "224"
+                  endingLineNumber = "224"
+                  offsetFromSymbolStart = "1514">
+               </Location>
+               <Location
+                  uuid = "919E3DCD-E0C0-49BD-A499-B6393F51DB51 - 83050ac3fb67a72b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[Renderer drawInMTKView:]"
+                  moduleName = "PhysicsEngineObjC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benerobert/Documents/Coding/CppProjects/PhysicsEngineObjC/PhysicsEngineObjC/Rendering/Renderer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "224"
+                  endingLineNumber = "224"
+                  offsetFromSymbolStart = "1560">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "688CDF47-E2EA-4647-A593-2332AFB1BEE1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PhysicsEngineObjC/Rendering/Renderer.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "-drawInMTKView:"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "688CDF47-E2EA-4647-A593-2332AFB1BEE1 - 83050ac3fb67a72b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[Renderer drawInMTKView:]"
+                  moduleName = "PhysicsEngineObjC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benerobert/Documents/Coding/CppProjects/PhysicsEngineObjC/PhysicsEngineObjC/Rendering/Renderer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "224"
+                  endingLineNumber = "224"
+                  offsetFromSymbolStart = "828">
+               </Location>
+               <Location
+                  uuid = "688CDF47-E2EA-4647-A593-2332AFB1BEE1 - 83050ac3fb67a72b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[Renderer drawInMTKView:]"
+                  moduleName = "PhysicsEngineObjC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benerobert/Documents/Coding/CppProjects/PhysicsEngineObjC/PhysicsEngineObjC/Rendering/Renderer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "224"
+                  endingLineNumber = "224"
+                  offsetFromSymbolStart = "1496">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

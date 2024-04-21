@@ -161,13 +161,7 @@
 
         // Create the command queue
         _commandQueue = [_device newCommandQueue];
-        
-        RigidBody body_1;
-        Vector3f position_2 {0, 0, 0.5};
-        Vector3f velocity_2 {0.5, 0.5, 0};
-        RigidBody body_2 {position_2, velocity_2};
-        _engine.addBody(&body_1);
-        _engine.addBody(&body_2);
+
     }
 
     return self;
@@ -186,10 +180,16 @@
 {
     NSTimeInterval currentTime = CACurrentMediaTime();
     NSTimeInterval elapsedTime = currentTime - _lastDrawTime;
-
+    
+    RigidBody body_1;
+    Vector3f position_2 {0, 0, 0.2};
+    Vector3f velocity_2 {0.5, 0.5, 0};
+    RigidBody body_2 {position_2, velocity_2};
+    _engine.addBody(&body_1);
+    _engine.addBody(&body_2);
+    
     if (elapsedTime >= _frameDuration) {
         _lastDrawTime = currentTime;
-        _engine.update();
         // Obtain a renderPassDescriptor generated from the view's drawable textures.
         //[self createRenderPassDescriptor:view.drawableSize];
         
@@ -220,8 +220,10 @@
             
             [_renderEncoder setVertexBytes:&_viewportSize length:sizeof(_viewportSize) atIndex:viewportSizeIndex];
             
+            //_engine.update();
             for (int i = 0; i < _engine._bodies.size(); i++) {
                 auto matrix = _engine._bodies[i]->_modelTransform;
+                //auto matrix = Eigen::Affine3f::Identity();
                 
                 [_renderEncoder setVertexBytes:matrix.matrix().data() length:sizeof(float) * 16 atIndex:instanceBufferIndex];
                 
