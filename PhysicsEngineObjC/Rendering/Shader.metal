@@ -17,10 +17,11 @@ struct VertexOut {
 };
 
 vertex VertexOut vertex_main(const VertexIn in [[stage_in]],
-                             constant matrix_float4x4 &modelTransform [[buffer(instanceBufferIndex)]])
+                             constant matrix_float4x4 &modelTransform [[buffer(instanceBufferIndex)]],
+                             constant matrix_float4x4 &viewProjMatrix [[buffer(12)]])
 {
     VertexOut out {
-        .position = modelTransform * in.position,
+        .position = viewProjMatrix * modelTransform * in.position,
         .normal = in.normal,
         .color = in.color
     };

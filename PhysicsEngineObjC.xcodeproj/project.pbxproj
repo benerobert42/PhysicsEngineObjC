@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A93453F92BE26AAE00F785EE /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = A93453F72BE26AAE00F785EE /* Camera.mm */; };
 		A96588D92BD4287F002AE7ED /* MetalToCpp.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9D490382BD0798800AA893F /* MetalToCpp.mm */; };
 		A96588DC2BD4292C002AE7ED /* RendererToPhys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96588DA2BD4292C002AE7ED /* RendererToPhys.cpp */; };
 		A96588E22BD46712002AE7ED /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D4903C2BD07B6C00AA893F /* RigidBody.cpp */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A93453F72BE26AAE00F785EE /* Camera.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Camera.mm; sourceTree = "<group>"; };
+		A93453F82BE26AAE00F785EE /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		A96588DA2BD4292C002AE7ED /* RendererToPhys.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RendererToPhys.cpp; sourceTree = "<group>"; };
 		A96588DB2BD4292C002AE7ED /* RendererToPhys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RendererToPhys.h; sourceTree = "<group>"; };
 		A9D490112BD052D800AA893F /* PhysicsEngineObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicsEngineObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +109,8 @@
 				A9D4902C2BD053F700AA893F /* Shader.metal */,
 				A96588DA2BD4292C002AE7ED /* RendererToPhys.cpp */,
 				A96588DB2BD4292C002AE7ED /* RendererToPhys.h */,
+				A93453F72BE26AAE00F785EE /* Camera.mm */,
+				A93453F82BE26AAE00F785EE /* Camera.h */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -214,6 +219,7 @@
 				A9D490292BD053BB00AA893F /* Renderer.mm in Sources */,
 				A9D490192BD052D800AA893F /* ViewController.m in Sources */,
 				A96588E22BD46712002AE7ED /* RigidBody.cpp in Sources */,
+				A93453F92BE26AAE00F785EE /* Camera.mm in Sources */,
 				A96588DC2BD4292C002AE7ED /* RendererToPhys.cpp in Sources */,
 				A9D490202BD052DD00AA893F /* main.mm in Sources */,
 				A9D4902D2BD053F700AA893F /* Shader.metal in Sources */,

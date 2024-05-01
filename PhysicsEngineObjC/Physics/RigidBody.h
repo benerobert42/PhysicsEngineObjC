@@ -27,9 +27,10 @@ public:
         _acceleration(acceleration),
         _radius(radius),
         _mass(mass),
-        _drag(drag),
-        _modelTransform(modelTransform)
-    {}
+        _drag(drag)
+    {
+        _modelTransform.translation() = _position;
+    }
     
     void update(double dt);
 

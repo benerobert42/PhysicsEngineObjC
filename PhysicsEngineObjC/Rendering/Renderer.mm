@@ -1,5 +1,6 @@
 #include <simd/simd.h>
 
+#include "Camera.h"
 #import "Renderer.h"
 #import "ShaderTypes.h"
 #include "Engine.h"
@@ -21,6 +22,7 @@
     MTLRenderPassDescriptor *_renderPassDescriptor;
     id<MTLRenderCommandEncoder> _renderEncoder;
     PhysicsEngine _engine;
+    Camera _camera;
     
     NSTimeInterval _lastDrawTime;
     NSTimeInterval _frameDuration; // Desired frame duration in seconds (e.g., 1.0 / 60 for 60 fps)
@@ -113,6 +115,7 @@
         
         _frameDuration = 1.0 / 60.0; // Default frame duration for 60 fps
         _lastDrawTime = 0.0;
+        _camera = Camera();
 
         // Load all the shader files with a .metal file extension in the project.
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
@@ -182,8 +185,8 @@
     NSTimeInterval elapsedTime = currentTime - _lastDrawTime;
     
     RigidBody body_1;
-    Vector3f position_2 {0, 0, 0.2};
-    Vector3f velocity_2 {0.5, 0.5, 0};
+    Vector3f position_2 {0.0, 0.0, 0.4};
+    Vector3f velocity_2 {0.0, 0.2, 0.4};
     RigidBody body_2 {position_2, velocity_2};
     _engine.addBody(&body_1);
     _engine.addBody(&body_2);
@@ -222,8 +225,9 @@
             
             //_engine.update();
             for (int i = 0; i < _engine._bodies.size(); i++) {
-                auto matrix = _engine._bodies[i]->_modelTransform;
-                //auto matrix = Eigen::Affine3f::Identity();
+                //auto matrix = _engine._bodies[i]->_modelTransform;
+                auto matrix = Eigen::Affine3f::Identity();
+                matrix.translation() = _engine._bodies[i]->_position;
                 
                 [_renderEncoder setVertexBytes:matrix.matrix().data() length:sizeof(float) * 16 atIndex:instanceBufferIndex];
                 
